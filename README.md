@@ -28,11 +28,6 @@ Brewster, Smidt), [arXiv:2607.21829](https://arxiv.org/abs/2607.21829). See [Cit
 - **`tutorials/`** — example notebooks. Some fetch structures from
   the Materials Project via `mp-api` (see Installation below).
 
-Directories that were superseded by the above (`data_generation/`, `models/`,
-`bispectrum_xrd_ml/`, `david_data/`, and two unused duplicate math modules in
-`bispectrum/`) have been removed; their functionality now lives in `utilities.py`
-and `training/mp_full/`.
-
 ## Installation
 
 ```bash
