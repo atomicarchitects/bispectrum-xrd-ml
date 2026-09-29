@@ -1,0 +1,17 @@
+type: transformerdirect
+d_model: 256
+h_dim: 512
+transformer_proc: tokenization  # unused in sparse mode (model.py only consults this for input_type=dense); kept so cfg.model.transformer_proc always resolves
+n_self_layer: 12
+n_head: 8
+attn_pdrop: 0.2
+resid_pdrop: 0.2
+out_dim: [1,6]
+
+# Sparse/peak-list input path (model.py's XRDTransformerEncoder(input_type='sparse')),
+# direct-prediction counterpart to transformerbispec_sparse.yaml -- predicts
+# lattice params directly (out_dim [1,6]) instead of bispectrum coefficients,
+# so no run_alg_inversion.py step is needed for this comparison.
+input_type: sparse
+max_peaks: 30
+use_intensity: true

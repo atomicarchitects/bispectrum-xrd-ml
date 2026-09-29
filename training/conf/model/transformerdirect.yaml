@@ -1,0 +1,9 @@
+type: transformerdirect
+d_model: 256 #384
+h_dim: 512 #756
+transformer_proc: tokenization
+n_self_layer: 12 #16
+n_head: 8 #12
+attn_pdrop: 0.2
+resid_pdrop: 0.2
+out_dim: [1,6]

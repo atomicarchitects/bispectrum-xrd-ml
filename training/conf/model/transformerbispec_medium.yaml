@@ -1,0 +1,9 @@
+type: transformerbispec
+d_model: 320
+h_dim: 640
+transformer_proc: tokenization
+n_self_layer: 12
+n_head: 8
+attn_pdrop: 0.15
+resid_pdrop: 0.15
+out_dim: [10,35]

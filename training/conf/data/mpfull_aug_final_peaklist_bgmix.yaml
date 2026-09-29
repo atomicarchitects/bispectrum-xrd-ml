@@ -1,0 +1,28 @@
+name: mpfull_aug_final_peaklist_bgmix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+# Noise-augmented counterpart of mpfull_aug_final_peaklist.yaml, for a clean
+# from-scratch ablation of "does CNRS/RRUFF background-noise augmentation
+# help the peak-list model" (mirrors mpfull_aug_final's default vs
+# default_cnrs_mix comparison for the dense model). Train XRD input is
+# train_peaklist_bgmix_combined.pkl: same 927,080 keys/targets as
+# train_peaklist_combined.pkl, but each entry's peaks were extracted from the
+# clean curve + one Gamma noise realization (RRUFF/CNRS mixed 50/50, see
+# generate_augmented_data.py's peaklist_from_xrd --bg-noise-cnrs-mix-prob)
+# instead of the clean curve directly -- same size, same structures, same
+# targets, only the noise-realism of the XRD input differs.
+#
+# val/test are intentionally the SAME clean val_peaklist.pkl/test_peaklist.pkl
+# as the clean run -- background-noise augmentation is a *train-set* device
+# (mirrors bg_noise_aug.add_bg_noise, which train.py only ever applies inside
+# the training loop, never to val/test), so eval data must stay identical
+# across both runs for the comparison to mean anything.
+xrd_train_file: train_peaklist_bgmix_combined.pkl
+target_train_file: train_bispec_combined.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false

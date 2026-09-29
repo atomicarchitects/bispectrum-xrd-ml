@@ -1,0 +1,18 @@
+name: mpfull_aug_final_peaklist_direct
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+# Peak-list counterpart of mpfull_aug_final_direct.yaml: same direct
+# lattice-parameter regression (out_dim [1,6], no bispectrum/inversion step),
+# but XRD input is the clean peak-list representation (train_peaklist_combined.pkl)
+# instead of the dense curve, matching mpfull_aug_final_peaklist.yaml's input
+# choice. Targets are the same train_prim_lat_combined.pkl lattice params
+# used by the dense direct run.
+xrd_train_file: train_peaklist_combined.pkl
+target_train_file: train_prim_lat_combined.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_prim_lat.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_prim_lat.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: true

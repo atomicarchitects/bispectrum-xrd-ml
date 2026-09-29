@@ -1,0 +1,12 @@
+name: mp20_aug_final_direct
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug_cag_strain_texture
+xrd_train_file: train_sim_xrd_combined.pkl
+target_train_file: train_prim_lat_combined.pkl
+xrd_val_file: val_sim_xrd.pkl
+target_val_file: val_data_prim_lat.pkl
+xrd_test_file: test_sim_xrd.pkl
+target_test_file: test_data_prim_lat.pkl
+batch_size: 64
+indices: false
+d_model: 384
+is_normalized: true

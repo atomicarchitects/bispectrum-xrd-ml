@@ -1,0 +1,47 @@
+<class 'pandas.core.frame.DataFrame'>
+152173
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 152173 entries, 0 to 152172
+Data columns (total 23 columns):
+ #   Column                           Non-Null Count   Dtype  
+---  ------                           --------------   -----  
+ 0   id                               152173 non-null  object 
+ 1   intensities                      152173 non-null  object 
+ 2   tt                               152173 non-null  object 
+ 3   dspace                           152173 non-null  object 
+ 4   top_500_intensities              152173 non-null  object 
+ 5   intensities_100                  152173 non-null  object 
+ 6   tt_100                           152173 non-null  object 
+ 7   dspace_100                       152173 non-null  object 
+ 8   intensities_60                   152173 non-null  object 
+ 9   tt_60                            152173 non-null  object 
+ 10  dspace_60                        152173 non-null  object 
+ 11  matrix                           152173 non-null  object 
+ 12  crystal_sys                      152173 non-null  object 
+ 13  bravais                          152173 non-null  object 
+ 14  formula                          152173 non-null  object 
+ 15  recip                            152173 non-null  object 
+ 16  prim_mat                         152173 non-null  object 
+ 17  prim_volume                      152173 non-null  float64
+ 18  recip_prim                       152173 non-null  object 
+ 19  recip_prim_volume                152173 non-null  float64
+ 20  bispec_k_max_0.6666666666666666  152173 non-null  object 
+ 21  bispec_k_max_1                   152173 non-null  object 
+ 22  bispec_k_max_2.5                 152173 non-null  object 
+dtypes: float64(2), object(21)
+memory usage: 26.7+ MB
+None
+           id  ...                                   bispec_k_max_2.5
+0   mp-757220  ...  [[tensor(5.4121e+10, dtype=torch.float64), ten...
+1   mp-573369  ...  [[tensor(1.1156e+12, dtype=torch.float64), ten...
+2    mp-28967  ...  [[tensor(7.9411e+09, dtype=torch.float64), ten...
+3   mp-559295  ...  [[tensor(1.3657e+11, dtype=torch.float64), ten...
+4  mp-1293179  ...  [[tensor(5.9129e+09, dtype=torch.float64), ten...
+
+[5 rows x 23 columns]
+<class 'numpy.ndarray'>
+[1.22485337e+01 6.69261307e+00 6.34404617e-01 ... 2.07765206e-02
+ 1.05576379e-02 2.50056744e-02]
+<class 'numpy.ndarray'>
+[ 3.36160434  4.95199698  5.74521689 ... 89.98346007 89.98953532
+ 89.99077895]

@@ -1,0 +1,3 @@
+<class 'list'>
+27136
+dict_keys(['mp_id', 'cif', 'crystal'])

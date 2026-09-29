@@ -1,0 +1,12 @@
+name: mpfull_strain_peaklist
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_strain
+xrd_train_file: train_peaklist_strain.pkl
+target_train_file: train_bispec_dict.pkl
+xrd_val_file: val_peaklist_strain.pkl
+target_val_file: val_bispec_dict.pkl
+xrd_test_file: test_peaklist_strain.pkl
+target_test_file: test_bispec_dict.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false

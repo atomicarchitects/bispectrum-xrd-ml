@@ -1,0 +1,18 @@
+name: mp20aug_peaklist_cnrsonly
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug_cnrsonly
+# In-domain-noise variant of mp20aug_peaklist_bgmix.yaml: the train peak lists get
+# one CNRS-fit Gamma background realization per entry (--bg-noise-cnrs-mix-prob 1.0,
+# i.e. no RRUFF profile), the analogue of the RRUFF-fit noise used for the RRUFF
+# evaluation. The generator always names its output train_peaklist_bgmix.pkl, so
+# this lives in its own directory. val/test peak lists and all bispectrum targets
+# are symlinks to the files in mp20_aug/all_aug (clean val/test, same targets).
+xrd_train_file: train_peaklist_bgmix.pkl
+target_train_file: all_aug_train_data_bispec.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false

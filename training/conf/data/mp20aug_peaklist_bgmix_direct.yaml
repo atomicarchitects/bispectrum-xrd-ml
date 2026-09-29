@@ -1,0 +1,17 @@
+name: mp20aug_peaklist_bgmix_direct
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug
+# Direct-prediction (no bispectrum/inversion) counterpart to
+# mp20aug_peaklist_bgmix.yaml, mirroring mpfull_aug_final_peaklist_bgmix_direct.yaml:
+# same CNRS/RRUFF-mixed bg-noise peak-list input, but the model regresses
+# lattice params directly (out_dim [1,6]) from the MP-20 primitive-lattice targets.
+# val/test are the same clean val_peaklist.pkl/test_peaklist.pkl.
+xrd_train_file: train_peaklist_bgmix.pkl
+target_train_file: all_aug_train_data_prim_lat.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_prim_lat.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_prim_lat.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: true

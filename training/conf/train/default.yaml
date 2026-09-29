@@ -1,0 +1,35 @@
+epochs: 1000
+lr: 2e-4           # keep base LR moderate
+wd: 5e-4           # good balance for regularization
+clip_grad_norm: 2.0
+loss: "L1"  # L1 or MSE or Huber
+huber_delta: 1e-6  # only used if loss is Huber
+
+warmup_ratio: 0.01 # slightly longer warmup for stability
+use_scheduler: true
+scheduler_restart_period: 1000  # cosine annealing with warm restarts (SGDR), period in epochs
+reduce_factor: 0.3    # LR reduced by half when plateauing
+reduce_patience: 10   # wait 10 epochs before reducing LR
+min_lr: 1e-5          # don't go below this LR
+
+# WandB config
+use_wandb: false
+wandb_project: "xrd"
+wandb_run_name: null
+
+load_pretrained: false
+pretrained_path: null
+
+mask_zeros_in_loss: true
+mask_loss_threshold: 1e-10
+
+epsilon: false
+
+early_stopping: true
+early_stopping_patience: 50   # stop if no improvement for this many epochs
+early_stopping_min_delta: 0.0 # minimum improvement to count as improvement
+early_stopping_flag_path: null
+
+bg_noise_aug: true   # add Gamma background noise per batch during training
+bg_noise_seed: 0
+#use_float_64: true

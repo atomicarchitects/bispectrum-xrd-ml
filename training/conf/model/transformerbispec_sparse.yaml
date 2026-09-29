@@ -1,0 +1,16 @@
+type: transformerbispec
+d_model: 256
+h_dim: 512
+transformer_proc: tokenization  # unused in sparse mode (model.py only consults this for input_type=dense); kept so cfg.model.transformer_proc always resolves
+n_self_layer: 12
+n_head: 8
+attn_pdrop: 0.2
+resid_pdrop: 0.2
+out_dim: [10,35]
+
+# Sparse/peak-list input path (model.py's XRDTransformerEncoder(input_type='sparse')).
+# Position + intensity variant -- see transformerbispec_sparse_posonly.yaml for
+# the position-only counterpart.
+input_type: sparse
+max_peaks: 30
+use_intensity: true

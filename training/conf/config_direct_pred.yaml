@@ -1,0 +1,8 @@
+defaults:
+  - data: mp20_direct
+  - model: transformerdirect
+  - train: default_direct
+  - _self_
+
+seed: 42
+output_dir: ${oc.env:POWDERXRD_DATA_ROOT}/

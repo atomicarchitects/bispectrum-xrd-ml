@@ -1,0 +1,24 @@
+name: mp20aug_peaklist_bgmix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug
+# MP-20 counterpart of mpfull_aug_final_peaklist_bgmix.yaml: same peak-list input
+# with one CNRS/RRUFF-mixed (50/50) Gamma bg-noise realization added to each
+# clean dense curve before find_peaks, generated from the existing
+# all_aug_train_data_sim_xrd.pkl (same 271,360 keys/targets as the dense mp20aug run).
+# val/test are CLEAN peak lists (no noise), as in the full-MP runs.
+# Generate with (from training/mp_full/, R=$POWDERXRD_DATA_ROOT):
+#   python generate_augmented_data.py --augmentation peaklist_from_xrd --dataset mp20 \
+#     --xrd-pkl-dir $R/mp20_aug/all_aug --xrd-pkl-pattern 'all_aug_{split}_data_sim_xrd.pkl' \
+#     --output-dir $R/mp20_aug/all_aug --splits train --bg-noise-cnrs-mix-prob 0.5 --bg-noise-seed 0
+#   python generate_augmented_data.py --augmentation peaklist_from_xrd --dataset mp20 \
+#     --xrd-pkl-dir $R/mp20_aug/all_aug --xrd-pkl-pattern '{split}_data_sim_xrd.pkl' \
+#     --output-dir $R/mp20_aug/all_aug --splits val test
+xrd_train_file: train_peaklist_bgmix.pkl
+target_train_file: all_aug_train_data_bispec.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false

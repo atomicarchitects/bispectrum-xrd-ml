@@ -1,0 +1,11 @@
+name: mp20old
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20/old_data
+xrd_train_file: mp20_sim_xrd_train.pkl
+bispec_train_file: mp20_bispec_lat_train.pkl
+xrd_val_file: mp20_sim_xrd_val.pkl
+bispec_val_file: mp20_bispec_lat_val.pkl
+xrd_test_file: mp20_sim_xrd_test.pkl
+bispec_test_file: mp20_bispec_lat_test.pkl
+batch_size: 32
+indices: false
+is_normalized: false

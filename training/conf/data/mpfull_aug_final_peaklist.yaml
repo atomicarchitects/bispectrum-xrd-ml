@@ -1,0 +1,23 @@
+name: mpfull_aug_final_peaklist
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+# Peak-list counterpart of mpfull_aug_final.yaml -- same structures, same
+# train/val/test split, same bispec targets (reused as-is: bispectrum is
+# representation-agnostic). Only the XRD input changes: dense curve ->
+# (position, prominence) peak lists via scipy.signal.find_peaks on the
+# broadened curve (see generate_augmented_data.py's peaklist_combine /
+# peaklist_from_xrd). train_peaklist_combined.pkl = union of caglioti4x
+# (mpfull_aug) + strain (mpfull_strain) + texture (mpfull_texture_cag)
+# peak lists, 927,080 entries -- exactly matches train_bispec_combined.pkl.
+# val/test_peaklist.pkl are extracted directly from the existing unaugmented
+# val_sim_xrd.pkl/test_sim_xrd.pkl so their keys match val_data_bispec_list.pkl
+# /test_data_bispec_list.pkl exactly.
+xrd_train_file: train_peaklist_combined.pkl
+target_train_file: train_bispec_combined.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false

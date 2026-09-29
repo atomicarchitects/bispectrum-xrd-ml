@@ -1,0 +1,8 @@
+defaults:
+  - data: mpfull
+  - model: transformerbispec
+  - train: default
+  - _self_
+
+seed: 42
+output_dir: ${oc.env:POWDERXRD_DATA_ROOT}/

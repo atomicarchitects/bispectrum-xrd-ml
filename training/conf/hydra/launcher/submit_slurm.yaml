@@ -1,0 +1,24 @@
+# @package hydra.launcher
+_target_: hydra_plugins.hydra_submitit_launcher.submitit_launcher.SubmititLauncher
+
+# ===============================
+# Slurm resource requests per job
+# ===============================
+
+timeout_min: 240         # 4 hours per model config
+gpus_per_node: 4         # 4 GPUs per config
+tasks_per_node: 1
+
+# ===============================
+# NERSC-specific Slurm settings
+# ===============================
+
+slurm_partition: regular
+slurm_account: YOUR_ACCOUNT
+slurm_constraint: gpu&hbm80g
+
+# Optional: clean naming & logs
+slurm_additional_parameters:
+  job-name: transformer_sweep
+  output: slurm_logs/%x_%j.out
+  error: slurm_logs/%x_%j.err

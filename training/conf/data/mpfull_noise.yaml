@@ -1,0 +1,12 @@
+name: mpfull_noise
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull  # or an absolute path, e.g. /home/user/project/pickles
+xrd_train_file: train_data_sim_xrd.pkl
+target_train_file: train_data_bispec_list.pkl
+xrd_val_file: val_data_sim_xrd.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_data_sim_xrd.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: false
+d_model: 384
+is_normalized: false

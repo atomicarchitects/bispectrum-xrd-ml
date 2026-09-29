@@ -1,0 +1,26 @@
+name: mpfull_aug_final_peaklist_bgmix_nostrain
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+# Strain ablation for mpfull_aug_final_peaklist_bgmix: identical setup (same
+# caglioti4x + texture sources, same CNRS/RRUFF-mixed Gamma bg-noise
+# realization via peaklist_from_xrd --bg-noise-cnrs-mix-prob) but with the
+# strain-augmented source (mpfull_strain) dropped from the combine, to test
+# whether strain augmentation is itself hurting real (CNRS) generalization.
+# train_peaklist_bgmix_nostrain_combined.pkl = union of
+# mpfull_aug/train_peaklist_bgmix.pkl + mpfull_texture_cag/train_peaklist_bgmix.pkl
+# only (648,956 keys, vs 927,080 with strain included). target_train_file is
+# the same superset train_bispec_combined.pkl as the with-strain run --
+# align_dicts() in train.py intersects by key, so the extra strain-only
+# target entries are simply unused, no separate target file needed.
+#
+# val/test are the SAME clean val_peaklist.pkl/test_peaklist.pkl as every
+# other peaklist ablation in this directory, for a fair comparison.
+xrd_train_file: train_peaklist_bgmix_nostrain_combined.pkl
+target_train_file: train_bispec_combined.pkl
+xrd_val_file: val_peaklist.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_peaklist.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: true
+d_model: 256
+is_normalized: false
