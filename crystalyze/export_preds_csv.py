@@ -10,8 +10,7 @@ The ids come from the test CSV, in row order, which is the order
 
 `--reduce mean` averages over the num_evals Langevin samples (used for the
 148-entry RRUFF run, which was evaluated with --num_evals 5); `--reduce index
---eval-idx 0` takes a single sample, which is what extract_cell_params.py does
-for the .pt output format.
+--eval-idx 0` takes a single sample.
 
 Usage:
     python export_preds_csv.py \
