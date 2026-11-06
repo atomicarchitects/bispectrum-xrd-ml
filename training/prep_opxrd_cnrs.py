@@ -65,8 +65,10 @@ MAX_ATOMS      = 500                       # matches mp_full/filter_alpha_diffra
 def to_cuka_twotheta(theta2_deg, wavelength):
     """Convert 2theta values from a given wavelength to CuKa-equivalent."""
     theta_rad = np.radians(theta2_deg / 2.0)
-    sin_val   = np.sin(theta_rad) * wavelength / LAMBDA_CUKA
-    # Peaks beyond 90 deg in CuKa space are outside the model range — drop them
+    sin_val   = np.sin(theta_rad) * LAMBDA_CUKA / wavelength   # same d: sin(theta_Cu) = sin(theta) * lambda_Cu / lambda
+    # Drop physically impossible conversions (sin > 1, i.e. beyond 180 deg). Points between 90 and 180 deg are
+    # kept here; build_xrd_array's 5-90 deg grid excludes them (they only enter the interpolation of the last
+    # grid cells below 90 deg, exactly as for patterns measured at CuKa).
     valid = sin_val <= 1.0
     theta2_cuka = np.full_like(theta2_deg, np.nan)
     theta2_cuka[valid] = np.degrees(2.0 * np.arcsin(sin_val[valid]))

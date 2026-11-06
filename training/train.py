@@ -295,7 +295,8 @@ def train_model(cfg, model, train_loader, val_loader, loss_mask=None, start_epoc
             data, target = data.cuda().float(), target.cuda().float()
             if _bg_noise_std is not None and cfg.train.get("bg_noise_aug", True):
                 data = add_bg_noise(data, _bg_noise_std, rng=_bg_rng,
-                                     cnrs_mix_prob=cfg.train.get("bg_noise_cnrs_mix_prob", 0.0))
+                                     cnrs_mix_prob=cfg.train.get("bg_noise_cnrs_mix_prob", 0.0),
+                                     cnrs_profile=cfg.train.get("bg_noise_cnrs_profile", "cnrs"))
             optimizer.zero_grad()
             output = model(data)
             #if cfg.train.mask_zeros_in_loss and loss_mask is not None:

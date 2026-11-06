@@ -25,7 +25,7 @@ Usage (direct):
         --output_path /path/to/results.pkl
 """
 
-import argparse, os, pickle, sys
+import argparse, json, os, pickle, sys
 import numpy as np
 import torch
 from omegaconf import OmegaConf
@@ -38,7 +38,13 @@ LAT_PKL = os.path.join(RRUFF_ALPHA_DIR, 'rruff_alpha_prim_lat.pkl')
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument('--model_path',      required=True)
-    p.add_argument('--train_data_dir',  required=True)
+    p.add_argument('--train_data_dir',  default=None,
+                   help='Training data the checkpoint was trained on; only read for whatever '
+                        '--norm_stats/--lat_norm_stats do not supply.')
+    p.add_argument('--norm_stats',      default=None,
+                   help="json with the training set's xrd_mean/xrd_std (a released model's xrd_norm_stats.json)")
+    p.add_argument('--lat_norm_stats',  default=None,
+                   help="direct models: json with lat_mean/lat_std (a released model's lat_norm_stats.json)")
     p.add_argument('--train_xrd_file',  default='train_sim_xrd.pkl')
     p.add_argument('--train_lat_file',  default='train_bispec.pkl')
     p.add_argument('--prediction_type', choices=['direct', 'bispectrum'], required=True)
@@ -71,7 +77,11 @@ def main():
         state_dict['head.weight'] = state_dict.pop('linear_out.weight')
 
     allowed_indices = None
-    if 'head.linear.weight' in state_dict:
+    if 'head.row_idx' in state_dict:
+        # the structured-head mask is stored in the checkpoint (and load_state_dict overwrites it anyway)
+        allowed_indices = torch.stack([state_dict['head.row_idx'], state_dict['head.col_idx']], dim=1).tolist()
+        print(f'StructuredBispectrumHead with {len(allowed_indices)} allowed indices (from checkpoint)')
+    elif 'head.linear.weight' in state_dict:
         lat_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_lat_file), 'rb'))
         if isinstance(lat_train, dict):
             lat_train = list(lat_train.values())
@@ -99,19 +109,29 @@ def main():
     print(f'Loaded model from {args.model_path}')
 
     # Training normalization stats
-    print('Computing XRD normalization stats from training data...')
-    sim_xrd_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_xrd_file), 'rb'))
-    if isinstance(sim_xrd_train, dict):
-        sim_xrd_train = list(sim_xrd_train.values())
-    xrd_array = np.stack(sim_xrd_train).astype(np.float32)
-    xrd_train_tensor = torch.from_numpy(xrd_array).unsqueeze(1)
-    xrd_mean = xrd_train_tensor.mean()
-    xrd_std  = xrd_train_tensor.std()
-    del xrd_train_tensor
+    if args.norm_stats:
+        stats = json.load(open(args.norm_stats))
+        xrd_mean, xrd_std = torch.tensor(stats['xrd_mean']), torch.tensor(stats['xrd_std'])
+        print(f'XRD normalization stats from {args.norm_stats}')
+    else:
+        print('Computing XRD normalization stats from training data...')
+        sim_xrd_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_xrd_file), 'rb'))
+        if isinstance(sim_xrd_train, dict):
+            sim_xrd_train = list(sim_xrd_train.values())
+        xrd_array = np.stack(sim_xrd_train).astype(np.float32)
+        xrd_train_tensor = torch.from_numpy(xrd_array).unsqueeze(1)
+        xrd_mean = xrd_train_tensor.mean()
+        xrd_std  = xrd_train_tensor.std()
+        del xrd_train_tensor
     print(f'  XRD mean={xrd_mean:.4f}  std={xrd_std:.4f}')
 
     lat_mean = lat_std = None
-    if args.prediction_type == 'direct':
+    if args.prediction_type == 'direct' and args.lat_norm_stats:
+        stats = json.load(open(args.lat_norm_stats))
+        lat_mean = torch.tensor(stats['lat_mean']).to(device)
+        lat_std  = torch.tensor(stats['lat_std']).to(device)
+        print(f'  Lattice means: {lat_mean.cpu().numpy()} (from {args.lat_norm_stats})')
+    elif args.prediction_type == 'direct':
         lat_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_lat_file), 'rb'))
         if isinstance(lat_train, dict):
             lat_train = list(lat_train.values())

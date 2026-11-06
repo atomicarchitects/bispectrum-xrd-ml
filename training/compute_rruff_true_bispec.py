@@ -23,7 +23,7 @@ from utilities import get_bispectrum, get_neighbors
 _ROOT = os.environ.get('POWDERXRD_DATA_ROOT', "./data")
 RRUFF_DIR   = f'{_ROOT}/rruff_crystalyze'
 TEST_CSV    = f'{RRUFF_DIR}/test.csv'
-REF_PKL     = f'{_ROOT}/eval_results/rruff/rruff_crystalyze_results/rruff_mpfull_bispec.pkl'
+REF_PKL     = f'{RRUFF_DIR}/rruff_crystalyze_targets.pkl'  # from build_rruff_crystalyze_targets.py
 OUT_PATH    = f'{RRUFF_DIR}/true_bispecs_148.pkl'
 
 PRED_PKLS = {

@@ -680,7 +680,7 @@ def run_peaklist_from_xrd(args):
     if noise_on:
         from bg_noise_aug import _sample_gamma_params
         rng = np.random.default_rng(args.bg_noise_seed)
-        print(f"bg-noise ON: cnrs_mix_prob={args.bg_noise_cnrs_mix_prob}  seed={args.bg_noise_seed}  "
+        print(f"bg-noise ON: cnrs_mix_prob={args.bg_noise_cnrs_mix_prob}  cnrs_profile={args.bg_noise_cnrs_profile}  seed={args.bg_noise_seed}  "
               f"(one Gamma realization per entry, added before find_peaks; same key set/count as "
               f"the clean run, just written to '{{split}}_peaklist_bgmix.pkl' instead)")
     out_name = "peaklist_bgmix" if noise_on else "peaklist"
@@ -700,7 +700,8 @@ def run_peaklist_from_xrd(args):
         for key, dense_xrd in tqdm(dense_dict.items(), desc=f"peaklist_from_xrd[{split}]"):
             curve = np.asarray(dense_xrd, dtype=np.float64)
             if noise_on:
-                a, scale = _sample_gamma_params(1, rng, cnrs_mix_prob=args.bg_noise_cnrs_mix_prob)
+                a, scale = _sample_gamma_params(1, rng, cnrs_mix_prob=args.bg_noise_cnrs_mix_prob,
+                                                cnrs_profile=args.bg_noise_cnrs_profile)
                 curve = curve + rng.gamma(a[0], scale[0], size=curve.shape[0])
             results[key] = _extract_peaks_via_find_peaks(curve, args.peaklist_max_peaks)
 
@@ -867,6 +868,10 @@ def build_parser():
                         "entry count/keys either way, just noisier peak sets. 0.0 = pure RRUFF "
                         "profile, 1.0 = pure CNRS profile, default None = disabled (unchanged "
                         "behavior, no noise added).")
+    p.add_argument("--bg-noise-cnrs-profile", default="cnrs", choices=["cnrs", "cnrs_wlfix"],
+                   help="Which CNRS noise fit to use for the CNRS share of --bg-noise-cnrs-mix-prob: 'cnrs' (original, "
+                        "fit before the wavelength-conversion fix; reproduces the existing models) or 'cnrs_wlfix' "
+                        "(corrected fit).")
     p.add_argument("--bg-noise-seed", type=int, default=0)
 
     # caglioti4x-only
