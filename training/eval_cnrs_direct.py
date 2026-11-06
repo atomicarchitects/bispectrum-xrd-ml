@@ -8,7 +8,9 @@ true means the model was trained on (raw - lat_mean)/lat_std targets, and
 lat_mean/lat_std (computed from the training set at train.py runtime) are
 NOT saved in the checkpoint -- this script recomputes them exactly as
 train.py does (same align_dicts intersection of the xrd_train_file and
-target_train_file keys) before un-normalizing predictions.
+target_train_file keys) before un-normalizing predictions. With
+--lat-norm-stats it reads them from a json instead (the released checkpoints
+ship one as lat_norm_stats.json), so the training data is not needed.
 
 Usage (full-MP model, selection slice):
     python eval_cnrs_direct.py --checkpoint-path /path/to/epoch18_....pt
@@ -88,6 +90,9 @@ def main():
     p.add_argument("--norm-stats", default=None,
                    help="Dense models only: json with the training set's xrd_mean/xrd_std "
                         "(from compute_xrd_norm_stats.py).")
+    p.add_argument("--lat-norm-stats", default=None,
+                   help="json with lat_mean/lat_std (e.g. a released model's lat_norm_stats.json); "
+                        "skips recomputing them from --data-dir/--xrd-train-file/--target-train-file.")
     p.add_argument("--slice", default="selection", choices=["selection", "reporting", "all"])
     p.add_argument("--ids-from-pkl", default=None,
                    help="Evaluate exactly the material_ids of this inversion-input pkl (implies --slice all).")
@@ -97,7 +102,15 @@ def main():
     p.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
     args = p.parse_args()
 
-    lat_mean, lat_std = recompute_lat_norm_stats(args.xrd_train_file, args.data_dir, args.target_train_file)
+    if args.lat_norm_stats:
+        import json
+        with open(args.lat_norm_stats) as f:
+            stats = json.load(f)
+        lat_mean = torch.tensor(stats["lat_mean"], dtype=torch.float32)
+        lat_std = torch.tensor(stats["lat_std"], dtype=torch.float32)
+        print(f"Loaded lat_mean/lat_std from {args.lat_norm_stats}")
+    else:
+        lat_mean, lat_std = recompute_lat_norm_stats(args.xrd_train_file, args.data_dir, args.target_train_file)
 
     slice_name = "all" if args.ids_from_pkl else args.slice
     suffix = "" if slice_name == "all" else f"_{slice_name}"

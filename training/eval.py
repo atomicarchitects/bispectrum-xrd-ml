@@ -21,6 +21,7 @@ Usage (bispectrum prediction):
 """
 
 import argparse
+import json
 import os
 import pickle
 
@@ -53,6 +54,12 @@ def parse_args():
                              "(default: test_data_prim_lat.pkl)")
     parser.add_argument("--device", default="cuda",
                         help="Device to run inference on (default: cuda)")
+    parser.add_argument("--norm_stats", default=None,
+                        help="json with the training set's xrd_mean/xrd_std (a released model's "
+                             "xrd_norm_stats.json); with it the training data is not loaded")
+    parser.add_argument("--lat_norm_stats", default=None,
+                        help="direct models with --norm_stats: json with lat_mean/lat_std "
+                             "(a released model's lat_norm_stats.json)")
     return parser.parse_args()
 
 
@@ -72,40 +79,53 @@ def main():
     from model import XRDTransformerEncoder
     from train import align_dicts, prepare_data, prepare_data_direct
 
-    print("Loading training data for normalization stats...")
-    sim_xrd_train = pickle.load(
-        open(os.path.join(config.data.DATA_DIR, config.data.xrd_train_file), "rb")
-    )
-    bispec_train = pickle.load(
-        open(os.path.join(config.data.DATA_DIR, config.data.target_train_file), "rb")
-    )
-    train_ids, sim_xrd_train, bispec_train = align_dicts(sim_xrd_train, bispec_train)
-
-    xrd_array = np.stack(sim_xrd_train).astype(np.float32)
-    xrd_train_tensor = torch.from_numpy(xrd_array).unsqueeze(1)
-    xrd_mean = xrd_train_tensor.mean()
-    xrd_std = xrd_train_tensor.std()
-
-    if isinstance(bispec_train[0], torch.Tensor):
-        target_train = torch.stack(bispec_train).float()
-    else:
-        target_train = torch.tensor(np.array(bispec_train))
-    lattice_means = target_train.mean(dim=0)  # keep on CPU for prepare_data_direct
-    lattice_stds = target_train.std(dim=0)
-
-    # compute allowed_indices before building the model
+    model_dict = torch.load(args.model_path, map_location=args.device, weights_only=False)["model_state_dict"]
     allowed_indices = None
-    if args.prediction_type == "bispectrum" and getattr(config.train, "mask_zeros_in_loss", False):
-        loss_mask = torch.any(
-            torch.abs(target_train) > config.train.mask_loss_threshold, dim=0
+    lattice_means = lattice_stds = None
+
+    if args.norm_stats:
+        stats = json.load(open(args.norm_stats))
+        xrd_mean, xrd_std = torch.tensor(stats["xrd_mean"]), torch.tensor(stats["xrd_std"])
+        if args.lat_norm_stats:
+            stats = json.load(open(args.lat_norm_stats))
+            lattice_means, lattice_stds = torch.tensor(stats["lat_mean"]), torch.tensor(stats["lat_std"])
+        elif args.prediction_type == "direct":
+            raise SystemExit("direct models need --lat_norm_stats together with --norm_stats")
+        if "head.row_idx" in model_dict:  # structured-head mask, stored in the checkpoint
+            allowed_indices = torch.stack([model_dict["head.row_idx"], model_dict["head.col_idx"]], dim=1).tolist()
+    else:
+        print("Loading training data for normalization stats...")
+        sim_xrd_train = pickle.load(
+            open(os.path.join(config.data.DATA_DIR, config.data.xrd_train_file), "rb")
         )
-        allowed_indices = torch.nonzero(loss_mask, as_tuple=False).tolist()
+        bispec_train = pickle.load(
+            open(os.path.join(config.data.DATA_DIR, config.data.target_train_file), "rb")
+        )
+        train_ids, sim_xrd_train, bispec_train = align_dicts(sim_xrd_train, bispec_train)
+
+        xrd_array = np.stack(sim_xrd_train).astype(np.float32)
+        xrd_train_tensor = torch.from_numpy(xrd_array).unsqueeze(1)
+        xrd_mean = xrd_train_tensor.mean()
+        xrd_std = xrd_train_tensor.std()
+
+        if isinstance(bispec_train[0], torch.Tensor):
+            target_train = torch.stack(bispec_train).float()
+        else:
+            target_train = torch.tensor(np.array(bispec_train))
+        lattice_means = target_train.mean(dim=0)  # keep on CPU for prepare_data_direct
+        lattice_stds = target_train.std(dim=0)
+
+        # compute allowed_indices before building the model
+        if args.prediction_type == "bispectrum" and getattr(config.train, "mask_zeros_in_loss", False):
+            loss_mask = torch.any(
+                torch.abs(target_train) > config.train.mask_loss_threshold, dim=0
+            )
+            allowed_indices = torch.nonzero(loss_mask, as_tuple=False).tolist()
+    if allowed_indices is not None:
         print(f"Using bispectrum loss mask with {len(allowed_indices)} allowed indices")
 
     # ------------------------------------------------------------------ model
     out_dim = (1, 6) if args.prediction_type == "direct" else (10, 35)
-
-    model_dict = torch.load(args.model_path, map_location=args.device, weights_only=False)["model_state_dict"]
 
     model = XRDTransformerEncoder(
         out_dim=out_dim,

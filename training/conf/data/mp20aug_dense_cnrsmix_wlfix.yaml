@@ -1,0 +1,16 @@
+name: mp20aug_dense_cnrsmix_wlfix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug
+# mp20aug_dense_cnrsmix.yaml retrained with the corrected CNRS background profile. Same data and targets; its own
+# name so training writes to $POWDERXRD_DATA_ROOT/mp20aug_dense_cnrsmix_wlfix/... and cannot overwrite the
+# existing mp20aug_dense_cnrsmix checkpoints. Dense models add the noise per batch in train.py, so no data needs
+# regenerating: use train=default_cnrs_mix +train.bg_noise_cnrs_profile=cnrs_wlfix.
+xrd_train_file: all_aug_train_data_sim_xrd.pkl
+target_train_file: all_aug_train_data_bispec.pkl
+xrd_val_file: val_data_sim_xrd.pkl
+target_val_file: val_data_bispec_list.pkl
+xrd_test_file: test_data_sim_xrd.pkl
+target_test_file: test_data_bispec_list.pkl
+batch_size: 64
+indices: false
+d_model: 384
+is_normalized: false

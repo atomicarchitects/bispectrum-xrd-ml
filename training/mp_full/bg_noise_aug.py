@@ -50,9 +50,21 @@ _LOGN_COV_CNRS  = np.array([[1.39591577, -0.64502092],
 _LOG_A_MAX_CNRS     = np.log(93.27)
 _LOG_SCALE_MAX_CNRS = np.log(0.337)
 
+# Corrected CNRS profile -- fit_bg_noise_cnrs.py rerun (n=825) after fixing the inverted wavelength conversion in
+# prep_opxrd_cnrs.py. The "cnrs" profile above was fit on patterns built with that error: misplaced peaks landed in
+# the fit's background-only regions, so it overestimates the median noise level by ~2x (5.5x RRUFF vs 2.9x here).
+# Kept unchanged so the models trained with it remain reproducible; new runs should use "cnrs_wlfix".
+# Ceilings follow the same mean + 2.5 sigma rule as the other profiles.
+_LOGN_MEAN_CNRS_WLFIX = np.array([1.72305575, -4.98351941])
+_LOGN_COV_CNRS_WLFIX  = np.array([[1.34156921, -0.69487043],
+                                   [-0.69487043, 1.96737849]])
+_LOG_A_MAX_CNRS_WLFIX     = _LOGN_MEAN_CNRS_WLFIX[0] + 2.5 * np.sqrt(_LOGN_COV_CNRS_WLFIX[0, 0])
+_LOG_SCALE_MAX_CNRS_WLFIX = _LOGN_MEAN_CNRS_WLFIX[1] + 2.5 * np.sqrt(_LOGN_COV_CNRS_WLFIX[1, 1])
+
 _PROFILES = {
     "rruff": (_LOGN_MEAN_RRUFF, _LOGN_COV_RRUFF, _LOG_A_MAX_RRUFF, _LOG_SCALE_MAX_RRUFF),
     "cnrs":  (_LOGN_MEAN_CNRS, _LOGN_COV_CNRS, _LOG_A_MAX_CNRS, _LOG_SCALE_MAX_CNRS),
+    "cnrs_wlfix": (_LOGN_MEAN_CNRS_WLFIX, _LOGN_COV_CNRS_WLFIX, _LOG_A_MAX_CNRS_WLFIX, _LOG_SCALE_MAX_CNRS_WLFIX),
 }
 
 
@@ -75,21 +87,22 @@ def _sample_gamma_params_one_profile(n: int, rng: np.random.Generator, profile: 
     return a_out, scale_out
 
 
-def _sample_gamma_params(batch_size: int, rng: np.random.Generator, cnrs_mix_prob: float = 0.0):
+def _sample_gamma_params(batch_size: int, rng: np.random.Generator, cnrs_mix_prob: float = 0.0,
+                         cnrs_profile: str = "cnrs"):
     """Return arrays (a, scale) of shape (batch_size,), each element drawn from
     the CNRS profile with probability cnrs_mix_prob and the RRUFF profile
-    otherwise."""
+    otherwise. cnrs_profile picks which CNRS fit: "cnrs" (original) or "cnrs_wlfix" (corrected)."""
     if cnrs_mix_prob <= 0.0:
         return _sample_gamma_params_one_profile(batch_size, rng, "rruff")
     if cnrs_mix_prob >= 1.0:
-        return _sample_gamma_params_one_profile(batch_size, rng, "cnrs")
+        return _sample_gamma_params_one_profile(batch_size, rng, cnrs_profile)
 
     is_cnrs = rng.random(batch_size) < cnrs_mix_prob
     a_out, scale_out = np.empty(batch_size), np.empty(batch_size)
 
     n_cnrs = int(is_cnrs.sum())
     if n_cnrs > 0:
-        a_out[is_cnrs], scale_out[is_cnrs] = _sample_gamma_params_one_profile(n_cnrs, rng, "cnrs")
+        a_out[is_cnrs], scale_out[is_cnrs] = _sample_gamma_params_one_profile(n_cnrs, rng, cnrs_profile)
     n_rruff = batch_size - n_cnrs
     if n_rruff > 0:
         a_out[~is_cnrs], scale_out[~is_cnrs] = _sample_gamma_params_one_profile(n_rruff, rng, "rruff")
@@ -102,6 +115,7 @@ def add_bg_noise(
     xrd_std: float,
     rng: np.random.Generator | None = None,
     cnrs_mix_prob: float = 0.0,
+    cnrs_profile: str = "cnrs",
 ) -> torch.Tensor:
     """
     Add Gamma background noise to a batch of normalised XRD patterns.
@@ -123,7 +137,7 @@ def add_bg_noise(
         rng = np.random.default_rng()
 
     B, _, N = batch.shape
-    a_arr, scale_arr = _sample_gamma_params(B, rng, cnrs_mix_prob=cnrs_mix_prob)
+    a_arr, scale_arr = _sample_gamma_params(B, rng, cnrs_mix_prob=cnrs_mix_prob, cnrs_profile=cnrs_profile)
 
     # Draw Gamma noise per pattern in [0,1] space.
     noise_np = np.stack([

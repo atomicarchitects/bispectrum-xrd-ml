@@ -22,22 +22,26 @@ Usage (direct):
         --output_path <out>.pkl
 """
 
-import argparse, os, pickle, sys
+import argparse, json, os, pickle, sys
 import numpy as np
 import torch
 from omegaconf import OmegaConf
-import pandas as pd
 
 _ROOT = os.environ.get("POWDERXRD_DATA_ROOT", "./data")
 CRYSTALYZE_DIR = f'{_ROOT}/rruff_crystalyze'
 XRD_PT   = f'{CRYSTALYZE_DIR}/test_pv_xrd.pt'
-CSV_PATH = f'{CRYSTALYZE_DIR}/rruff_pxrd_entries_used_148_with_rruff_ids.csv'
-REF_PKL  = f'{_ROOT}/eval_results/rruff/rruff_crystalyze_results/rruff_mp20_crystalyze_aug_bispec.pkl'
+REF_PKL  = f'{CRYSTALYZE_DIR}/rruff_crystalyze_targets.pkl'  # from build_rruff_crystalyze_targets.py
 
 def parse_args():
     p = argparse.ArgumentParser()
     p.add_argument('--model_path',     required=True)
-    p.add_argument('--train_data_dir', required=True)
+    p.add_argument('--train_data_dir', default=None,
+                   help='Training data the checkpoint was trained on; only read for whatever '
+                        '--norm_stats/--lat_norm_stats do not supply.')
+    p.add_argument('--norm_stats',     default=None,
+                   help="dense models: json with the training set's xrd_mean/xrd_std (a released model's xrd_norm_stats.json)")
+    p.add_argument('--lat_norm_stats', default=None,
+                   help="direct models: json with lat_mean/lat_std (a released model's lat_norm_stats.json)")
     p.add_argument('--train_xrd_file', default='train_sim_xrd.pkl')
     p.add_argument('--train_lat_file',  default='train_bispec.pkl')
     p.add_argument('--prediction_type', choices=['bispectrum', 'direct'], default='bispectrum')
@@ -67,7 +71,11 @@ def main():
     state_dict = checkpoint.get('model_state_dict', checkpoint)
 
     allowed_indices = None
-    if 'head.linear.weight' in state_dict:
+    if 'head.row_idx' in state_dict:
+        # the structured-head mask is stored in the checkpoint (and load_state_dict overwrites it anyway)
+        allowed_indices = torch.stack([state_dict['head.row_idx'], state_dict['head.col_idx']], dim=1).tolist()
+        print(f'StructuredBispectrumHead with {len(allowed_indices)} allowed indices (from checkpoint)')
+    elif 'head.linear.weight' in state_dict:
         lat_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_lat_file), 'rb'))
         if isinstance(lat_train, dict):
             lat_train = list(lat_train.values())
@@ -98,7 +106,11 @@ def main():
 
     # Training normalization stats
     xrd_mean = xrd_std = None
-    if args.input_type == 'dense':
+    if args.input_type == 'dense' and args.norm_stats:
+        stats = json.load(open(args.norm_stats))
+        xrd_mean, xrd_std = torch.tensor(stats['xrd_mean']), torch.tensor(stats['xrd_std'])
+        print(f'XRD normalization stats from {args.norm_stats}: mean={xrd_mean:.4f}  std={xrd_std:.4f}')
+    elif args.input_type == 'dense':
         print('Computing XRD normalization stats from training data...')
         sim_xrd_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_xrd_file), 'rb'))
         if isinstance(sim_xrd_train, dict):
@@ -111,7 +123,12 @@ def main():
         print(f'  XRD mean={xrd_mean:.4f}  std={xrd_std:.4f}')
 
     lat_mean = lat_std = None
-    if args.prediction_type == 'direct':
+    if args.prediction_type == 'direct' and args.lat_norm_stats:
+        stats = json.load(open(args.lat_norm_stats))
+        lat_mean = torch.tensor(stats['lat_mean']).to(device)
+        lat_std  = torch.tensor(stats['lat_std']).to(device)
+        print(f'  Lattice means: {lat_mean.cpu().numpy()} (from {args.lat_norm_stats})')
+    elif args.prediction_type == 'direct':
         lat_train = pickle.load(open(os.path.join(args.train_data_dir, args.train_lat_file), 'rb'))
         if isinstance(lat_train, dict):
             lat_train = list(lat_train.values())
@@ -123,8 +140,7 @@ def main():
         lat_std  = lat_tensor.std(dim=0).to(device)
         print(f'  Lattice means: {lat_mean.cpu().numpy()}')
 
-    # Load the 148 pre-computed XRD patterns and align to CSV ordering
-    df = pd.read_csv(CSV_PATH)
+    # Load the 148 pre-computed XRD patterns (ordered below by the targets file)
     xrd_dict = torch.load(XRD_PT, weights_only=False)  # {mineral_name: [1, 8500]}
 
     # Load reference pkl for targets and mineral_names ordering

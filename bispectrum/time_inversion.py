@@ -14,8 +14,7 @@ recover the old fully-isolated-timing behavior if that's ever wanted instead.
 
 Two settings are timed, since they differ substantially in candidate budget:
   default   -num_to_opt 15 -random_restarts 0  -candidate_timeout 10  (run_alg_inversion.py's own
-             argparse defaults; confirmed, via training/run_mp_remainder_inversion.sh, to be what
-             actually produced the reported MP-Full test-set inversion results)
+             argparse defaults, which produced the reported MP-Full test-set inversion results)
   wide      -num_to_opt 30 -random_restarts 10 -candidate_timeout 30  (used for the CNRS/RRUFF
              real-data evaluations elsewhere in this project)
 
@@ -44,8 +43,8 @@ from tqdm import tqdm
 import run_alg_inversion as inv
 
 _ROOT = os.environ.get("POWDERXRD_DATA_ROOT", "./data")
-# --predictions-file / --tag select which test set to time; defaults to MP-Full's, the one
-# whose settings were confirmed (training/run_mp_remainder_inversion.sh) to match `default` below.
+# --predictions-file / --tag select which test set to time; defaults to MP-Full's, whose
+# inversion used the `default` settings below.
 BISPEC_PREDICTIONS = f"{_ROOT}/final_test_results/mpfull_aug/bispec_test_results.pkl"
 MAT_PROJ_DF = f"{_ROOT}/materials_project_lat_bispec.h5"
 COB_PATH = f"{_ROOT}/cob_lmax6.pkl"
