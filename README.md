@@ -8,6 +8,7 @@ parameters.
 - **`utilities.py`**: XRD simulation, bispectrum computation, neighbor search, lattice comparison.
 - **`training/`**: data generation, training and evaluation. See [training/README.md](training/README.md).
 - **`bispectrum/`**: inversion, scoring with cctbx, and the paper's analyses. See [bispectrum/README.md](bispectrum/README.md).
+- **`crystalyze/`**: reproducing the Crystalyze baseline we compare against. See [crystalyze/README.md](crystalyze/README.md).
 - **`tutorials/`**: example notebooks.
 
 ## Installation

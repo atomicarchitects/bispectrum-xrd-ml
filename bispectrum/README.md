@@ -60,7 +60,8 @@ python inversion_results_cctbx.py --input <out>.h5 --output <scored>.pkl --plot-
 Direct-model results (`.pkl` from the eval scripts) are scored the same way.
 `inversion_results_cctbx.py` Niggli-reduces both lattices and compares them in the
 symmetry-consistent setting closest to the true cell, so the errors measure geometry, not cell
-choice.
+choice. `--crystalyze-params` / `--crystalyze-csv` score the Crystalyze baseline's lattices the same
+way; see [../crystalyze/README.md](../crystalyze/README.md).
 
 ## 3. Analyses
 
