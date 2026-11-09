@@ -85,7 +85,7 @@ Peak-list models use `eval_rruff_alpha_peaklist.py`.
 **RRUFF, Crystalyze set** (148 entries, 134 reported): build the inputs once, then evaluate.
 
 ```bash
-python build_rruff_crystalyze_patterns.py --xy-dir <RRUFF XY_Processed dir>   # -> test_pv_xrd.pt
+python build_rruff_crystalyze_patterns.py --xy-dir <RRUFF XY_Processed dir>   # -> rruff_measured_xrd.pt
 python build_rruff_crystalyze_targets.py     # from Crystalyze's test.csv -> rruff_crystalyze_targets.pkl
 python eval_rruff_crystalyze.py --model_path <ckpt> --norm_stats <xrd_norm_stats.json> --output_path <out>.pkl
 ```
