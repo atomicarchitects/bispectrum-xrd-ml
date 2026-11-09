@@ -1,5 +1,5 @@
 name: mpfull_aug
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_caglioti4x
 xrd_train_file: train_sim_xrd_aug.pkl
 target_train_file: train_bispec_dict.pkl
 xrd_val_file: val_sim_xrd_aug.pkl

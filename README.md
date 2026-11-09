@@ -24,7 +24,9 @@ in a separate environment: `mp-api` can force a `pymatgen` downgrade.
 
 ## Data
 
-No data is included. The paper uses:
+The paper uses the data below. The simulated datasets (test and validation sets, training targets and
+peak lists, structures) are included in the archive (see
+[Pretrained models and data](#pretrained-models-and-data)); the experimental data is not.
 
 - **Materials Project** (full set and MP-20). Split ids are in `training/splits/`:
   `mpfull_{train,val,test}_ids.txt` (92,708 / 31,722 / 30,449; by reduced formula, 60/20/20, seed 42)
@@ -39,11 +41,12 @@ No data is included. The paper uses:
 The inversion's lookup database (`materials_project_lat_bispec.h5`) is built by
 `bispectrum/build_lookup_database.py`. The paper's copy also contains the 1,922 MP-20 structures that
 are not in the full-MP splits (156,801 entries; the script reproduces the other 154,879 exactly), and
-is included with the pretrained models.
+is included in the archive.
 
-## Pretrained models
+## Pretrained models and data
 
-Download from **TODO: archive link / DOI**.
+Download from **TODO: archive link / DOI**: `main.tar`, `cnrs_noise.tar` and `data.tar`, plus the
+lookup database and `cob_lmax6.pkl`.
 
 - **`main/`**: the manuscript's models, with dense input and RRUFF-fit noise augmentation. These give
   the MP test-set, RRUFF and AlphaDiffract results, and the "Dense" rows of the CNRS tables.
@@ -60,7 +63,11 @@ Download from **TODO: archive link / DOI**.
   `mp20_peaklist_{bispec,direct}` and `mpfull_peaklist_{bispec,direct}`.
   `mp20_peaklist_bispec/epoch51.pt` and `mp20_peaklist_direct/epoch36.pt` are the snapshots behind
   the reported CNRS numbers.
-- **`shared/`**: `cob_lmax6.pkl` (also built by `bispectrum/build_cob.py`) and the lookup database.
+- **`data/`** mirrors the data root: extract it and set `POWDERXRD_DATA_ROOT` to it, and the data
+  configs find their files. It holds `mp20_cag/`, `mp20_aug/`, `mp20_cnrs_noise/`, `mpfull_cag/`,
+  `mpfull_aug/`, `mpfull_cnrs_noise/` and the split structures in `structures/`. The dense training
+  patterns (about 64 GB) are left out; `training/mp_full/generate_augmented_data.py
+  --struct-dir <data>/structures/<mp20|mpfull>` regenerates them.
 
 Each model directory has `best_val.pt`, its configs, `xrd_norm_stats.json` (dense input) and
 `lat_norm_stats.json` (direct models). Pass these to the eval scripts with `--norm_stats` and

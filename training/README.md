@@ -19,9 +19,9 @@ python generate_augmented_data.py --dataset {mp20,mpfull} --augmentation <type>
 ```
 
 `--augmentation` is one of:
-- `single`: one Caglioti broadening (the Crystalyze reference); gives `*_crystalyze_cag`.
-- `caglioti`, `strain`, `texture`: the augmentations. `combine` merges them into the `*_aug_final`
-  training sets.
+- `single`: one Caglioti broadening (the Crystalyze reference); gives `mp20_cag`, `mpfull_cag`.
+- `caglioti`, `strain`, `texture`: the augmentations. `combine` merges them into the training sets of
+  `mp20_aug`, `mpfull_aug`.
 - `peaklist_from_xrd`: peak-list inputs (up to 30 peaks) from existing dense patterns. With
   `--bg-noise-cnrs-mix-prob 0.5 --bg-noise-cnrs-profile cnrs_wlfix` it adds the mixed RRUFF/CNRS
   background noise before extracting the peaks (training split only).

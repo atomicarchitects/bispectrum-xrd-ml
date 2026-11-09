@@ -1,14 +1,14 @@
 name: mp20aug_peaklist_bgmix_wlfix
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug_bgmix_wlfix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cnrs_noise
 # mp20aug_peaklist_bgmix.yaml retrained with the corrected CNRS background profile ("cnrs_wlfix" in
 # mp_full/bg_noise_aug.py, fit after fixing the wavelength conversion in prep_opxrd_cnrs.py). Same 50/50
 # RRUFF/CNRS mix, same keys/targets; only the CNRS share of the train-set noise differs. The generator always
-# names its output train_peaklist_bgmix.pkl, so this lives in its own directory; val/test peak lists and the
-# bispectrum targets are symlinks to the files in mp20_aug/all_aug (clean val/test, same targets).
+# names its output train_peaklist_bgmix.pkl; in the released data it sits next to the clean val/test peak lists
+# and the bispectrum targets in mp20_cnrs_noise/.
 # Generate with (from training/mp_full/, R=$POWDERXRD_DATA_ROOT):
 #   python generate_augmented_data.py --augmentation peaklist_from_xrd --dataset mp20 \
-#     --xrd-pkl-dir $R/mp20_aug/all_aug --xrd-pkl-pattern 'all_aug_{split}_data_sim_xrd.pkl' \
-#     --output-dir $R/mp20_aug/all_aug_bgmix_wlfix --splits train \
+#     --xrd-pkl-dir $R/mp20_cnrs_noise --xrd-pkl-pattern 'all_aug_{split}_data_sim_xrd.pkl' \
+#     --output-dir $R/mp20_cnrs_noise --splits train \
 #     --bg-noise-cnrs-mix-prob 0.5 --bg-noise-cnrs-profile cnrs_wlfix --bg-noise-seed 0
 xrd_train_file: train_peaklist_bgmix.pkl
 target_train_file: all_aug_train_data_bispec.pkl

@@ -1,5 +1,5 @@
 name: mpfull_crystalyze_cag
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_crystalyze_cag
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_cag
 xrd_train_file: train_sim_xrd.pkl
 target_train_file: train_data_bispec_list.pkl
 xrd_val_file: val_sim_xrd.pkl

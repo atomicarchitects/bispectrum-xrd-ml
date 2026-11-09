@@ -1,9 +1,9 @@
 name: mp20aug_peaklist_rruffonly
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug_rruffonly
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_rruff_only_noise
 # Ablation: peak-list input with the RRUFF-fit background noise only (--bg-noise-cnrs-mix-prob 0.0), the
 # counterpart of mp20aug_peaklist_bgmix.yaml (50/50 CNRS/RRUFF mix) and mp20aug_peaklist_cnrsonly.yaml. The
 # generator always names its output train_peaklist_bgmix.pkl, so this lives in its own directory; val/test peak
-# lists and the bispectrum targets are symlinks to the files in mp20_aug/all_aug (clean val/test, same targets).
+# lists and the bispectrum targets are symlinks to the files in mp20_cnrs_noise (clean val/test, same targets).
 xrd_train_file: train_peaklist_bgmix.pkl
 target_train_file: all_aug_train_data_bispec.pkl
 xrd_val_file: val_peaklist.pkl

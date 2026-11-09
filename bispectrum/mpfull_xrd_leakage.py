@@ -9,7 +9,7 @@ that merely share a common simple lattice prototype (e.g. Sc2CoCu vs
 Be2Ag) as "duplicates," when their actual XRD intensities (which depend
 on atomic form factors, not just lattice geometry) differ substantially.
 
-Uses mpfull_crystalyze_cag/{train,val,test}_sim_xrd.pkl -- single canonical
+Uses mpfull_cag/{train,val,test}_sim_xrd.pkl -- single canonical
 curve per material (bare mp-id keys, no augmentation multiplier), much
 smaller than train_sim_xrd_combined.pkl (3.16GB vs 31.5GB) and avoids the
 suffix-filtering workaround entirely.
@@ -54,7 +54,7 @@ def lattice_diff(recip_a, recip_b):
 
 
 def main():
-    base = f"{DATA_ROOT}/mpfull_crystalyze_cag"
+    base = f"{DATA_ROOT}/mpfull_cag"
 
     print("Loading train/val/test curves (clean, single curve per material)...")
     t0 = time.time()

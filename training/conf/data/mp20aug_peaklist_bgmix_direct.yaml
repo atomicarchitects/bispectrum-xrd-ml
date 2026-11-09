@@ -1,5 +1,5 @@
 name: mp20aug_peaklist_bgmix_direct
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cnrs_noise_old_profile  # pre-fix "cnrs" noise profile; not in the released data
 # Direct-prediction (no bispectrum/inversion) counterpart to
 # mp20aug_peaklist_bgmix.yaml, mirroring mpfull_aug_final_peaklist_bgmix_direct.yaml:
 # same CNRS/RRUFF-mixed bg-noise peak-list input, but the model regresses

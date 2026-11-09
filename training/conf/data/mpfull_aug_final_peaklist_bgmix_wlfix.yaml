@@ -1,5 +1,5 @@
 name: mpfull_aug_final_peaklist_bgmix_wlfix
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture_bgmix_wlfix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_cnrs_noise
 # mpfull_aug_final_peaklist_bgmix.yaml retrained with the corrected CNRS background profile ("cnrs_wlfix" in mp_full/bg_noise_aug.py,
 # fit after fixing the wavelength conversion in prep_opxrd_cnrs.py). Same keys/targets and the same clean
 # val/test peak lists; only the CNRS share of the 50/50 train-set noise differs. The regenerated

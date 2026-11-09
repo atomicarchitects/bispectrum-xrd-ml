@@ -1,10 +1,10 @@
 name: mp20aug_peaklist_cnrsonly_direct
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug_cnrsonly
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cnrs_only_noise
 # Direct-prediction counterpart to mp20aug_peaklist_cnrsonly.yaml, mirroring
 # mp20aug_peaklist_bgmix_direct.yaml: the same CNRS-only-noise train peak lists,
 # but the model regresses lattice params (out_dim [1,6]) from the MP-20
 # primitive-lattice targets. The *_prim_lat.pkl files in all_aug_cnrsonly are
-# symlinks to the ones in mp20_aug/all_aug; val/test peak lists are clean symlinks.
+# symlinks to the ones in mp20_cnrs_noise; val/test peak lists are clean symlinks.
 xrd_train_file: train_peaklist_bgmix.pkl
 target_train_file: all_aug_train_data_prim_lat.pkl
 xrd_val_file: val_peaklist.pkl

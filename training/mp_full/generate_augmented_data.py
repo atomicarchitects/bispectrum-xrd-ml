@@ -36,13 +36,13 @@ Usage:
 
     python generate_augmented_data.py --augmentation caglioti \\
         --struct-dir /path/to/powderxrd --bispec-dir /path/to/mpfull \\
-        --output-dir /path/to/mpfull_cag
+        --output-dir /path/to/mpfull_caglioti_sets
 
     python generate_augmented_data.py --augmentation caglioti4x \\
-        --struct-dir /path/to/powderxrd --output-dir /path/to/mpfull_aug
+        --struct-dir /path/to/powderxrd --output-dir /path/to/mpfull_caglioti4x
 
     python generate_augmented_data.py --augmentation single \\
-        --struct-dir /path/to/powderxrd --output-dir /path/to/mpfull_cag_0.05_-0.06_0.07
+        --struct-dir /path/to/powderxrd --output-dir /path/to/mpfull_cag
 """
 import argparse
 import os
@@ -666,7 +666,7 @@ def run_peaklist(args):
 # ---------------------------------------------------------------------------
 # peaklist_from_xrd -- extract peaks from an EXISTING dense XRD pkl (e.g.
 # mpfull_texture_cag/{split}_sim_xrd_texture.pkl or
-# mpfull_aug/{split}_sim_xrd_aug.pkl) via the same find_peaks pipeline as
+# mpfull_caglioti4x/{split}_sim_xrd_aug.pkl) via the same find_peaks pipeline as
 # `peaklist`/`peaklist_strain`, without recomputing anything from structures.
 # find_peaks only needs the already-broadened array, so this is a cheap
 # post-processing pass over data that's already been generated -- much
@@ -715,7 +715,7 @@ def run_combine(args):
     """Merge the outputs of separate caglioti/strain/texture runs (disjoint
     key namespaces: {mpid}_{0..3}, {mpid}_strain_{1..n}, {mpid}_texture_{1..n})
     into one combined XRD/bispec/prim_lat pkl per split. Verified against the
-    real mp20_aug_cag_strain_texture/train_*_combined.pkl (exact match on a
+    real mp20_aug/train_*_combined.pkl (exact match on a
     sampled subset)."""
     for split in args.splits:
         print(f"\n=== {split.upper()} ===")
@@ -745,7 +745,7 @@ def run_peaklist_combine(args):
     (disjoint key namespaces: {mpid}_{0..3}, {mpid}_strain_{1..n},
     {mpid}_texture_{1..n}) into one combined peak-list pkl per split, keyed
     to align with the existing combined bispec/prim_lat targets (e.g.
-    mpfull_aug_cag_strain_texture/train_bispec_combined.pkl) via align_dicts
+    mpfull_aug/train_bispec_combined.pkl) via align_dicts
     in train.py -- no bispec/prim_lat re-merge needed since those targets
     are representation-agnostic and already exist. Only 'train' has all
     three augmented sources in production; val/test use a separate
@@ -845,7 +845,7 @@ def build_parser():
     p.add_argument("--symprec", type=float, default=None,
                    help="Override SINGLE_SYMPREC's per-dataset default (mpfull=0, mp20=1e-3). "
                         "Only matters if you want a fresh, self-consistent run rather than "
-                        "reproducing the existing mpfull_crystalyze_cag/mp20_crystalyze_cag data.")
+                        "reproducing the existing mpfull_cag/mp20_cag data.")
 
     # peaklist/peaklist_strain/peaklist_from_xrd-only
     p.add_argument("--peaklist-max-peaks", type=int, default=30,
@@ -880,7 +880,7 @@ def build_parser():
                    help="Set to 0 to disable intensity perturbation.")
 
     # combine-only: merges separate caglioti/strain/texture runs into one
-    # training set (matches e.g. mp20_aug_cag_strain_texture). Each defaults
+    # training set (matches e.g. mp20_aug). Each defaults
     # to DEFAULT_OUTPUT_DIR[--dataset][<type>] if not given explicitly.
     p.add_argument("--caglioti-dir", default=None)
     p.add_argument("--strain-dir", default=None)
@@ -915,21 +915,21 @@ DEFAULT_OUTPUT_DIR = {
     "mpfull": {
         "strain": f"{_BASE}/mpfull_strain",
         "texture": f"{_BASE}/mpfull_texture_cag",
-        "caglioti4x": f"{_BASE}/mpfull_aug",
-        "single": f"{_BASE}/mpfull_crystalyze_cag",
-        "peaklist": f"{_BASE}/mpfull_crystalyze_cag",  # same dir as `single` -- shares its bispec targets
+        "caglioti4x": f"{_BASE}/mpfull_caglioti4x",
+        "single": f"{_BASE}/mpfull_cag",
+        "peaklist": f"{_BASE}/mpfull_cag",  # same dir as `single` -- shares its bispec targets
         "peaklist_strain": f"{_BASE}/mpfull_strain",  # same dir as `strain` -- reuses its bispec_dict/prim_lat
-        "peaklist_combine": f"{_BASE}/mpfull_aug_cag_strain_texture",  # same dir as the dense `combine` output
+        "peaklist_combine": f"{_BASE}/mpfull_aug",  # same dir as the dense `combine` output
         # caglioti (data_gen_full_cag.py) never had a default; stays required
-        # even though mpfull_cag/ is confirmed correct, to preserve original
+        # even though mpfull_caglioti_sets/ is confirmed correct, to preserve original
         # behavior (an explicit choice, not an oversight).
     },
     "mp20": {
         "strain": f"{_BASE}/mp20_strain",
         "texture": f"{_BASE}/mp20_texture_cag",
-        "caglioti": f"{_BASE}/mp20_cag",
-        "single": f"{_BASE}/mp20_crystalyze_cag",
-        "peaklist": f"{_BASE}/mp20_crystalyze_cag",  # same dir as `single` -- shares its bispec targets
+        "caglioti": f"{_BASE}/mp20_caglioti_sets",
+        "single": f"{_BASE}/mp20_cag",
+        "peaklist": f"{_BASE}/mp20_cag",  # same dir as `single` -- shares its bispec targets
         "peaklist_strain": f"{_BASE}/mp20_strain",  # same dir as `strain` -- reuses its bispec_dict/prim_lat
         # caglioti4x has no confirmed mp20 directory -- mp20_aug/, mp20aug/,
         # and mp20_crystalyze_aug/ all exist but none matches the expected
