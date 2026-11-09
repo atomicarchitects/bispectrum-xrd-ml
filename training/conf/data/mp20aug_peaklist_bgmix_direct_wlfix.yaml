@@ -1,8 +1,8 @@
 name: mp20aug_peaklist_bgmix_direct_wlfix
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug_bgmix_wlfix
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cnrs_noise
 # mp20aug_peaklist_bgmix_direct.yaml retrained with the corrected CNRS background profile ("cnrs_wlfix"). Same
 # regenerated train_peaklist_bgmix.pkl as mp20aug_peaklist_bgmix_wlfix.yaml; the *_prim_lat.pkl targets and the
-# clean val/test peak lists are symlinks to the files in mp20_aug/all_aug.
+# clean val/test peak lists are in the same directory (mp20_cnrs_noise/).
 xrd_train_file: train_peaklist_bgmix.pkl
 target_train_file: all_aug_train_data_prim_lat.pkl
 xrd_val_file: val_peaklist.pkl

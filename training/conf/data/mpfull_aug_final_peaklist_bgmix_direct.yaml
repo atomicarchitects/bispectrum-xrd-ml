@@ -1,5 +1,5 @@
 name: mpfull_aug_final_peaklist_bgmix_direct
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug
 # Direct-prediction (no bispectrum/inversion) counterpart to
 # mpfull_aug_final_peaklist_bgmix.yaml, for comparing against the CNRS
 # evaluation: same CNRS/RRUFF-mixed Gamma bg-noise-augmented peak-list input

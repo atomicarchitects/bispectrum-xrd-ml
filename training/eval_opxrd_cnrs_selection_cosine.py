@@ -50,8 +50,8 @@ from generate_augmented_data import _extract_peaks_via_find_peaks
 _ROOT = os.environ.get("POWDERXRD_DATA_ROOT", "./data")
 CNRS_DIR = f"{_ROOT}/opxrd_cnrs_eval"
 TRUE_BISPEC_PATH = f"{_ROOT}/eval_results/opxrd_cnrs/opxrd_cnrs_true_bispec.pkl"
-DENSE_TARGET_PATH = f"{_ROOT}/mpfull_aug_cag_strain_texture/train_bispec_combined.pkl"
-NORM_STATS_PATH = f"{_ROOT}/mpfull_aug_cag_strain_texture/mpfull_aug_final_xrd_norm_stats.json"
+DENSE_TARGET_PATH = f"{_ROOT}/mpfull_aug/train_bispec_combined.pkl"
+NORM_STATS_PATH = f"{_ROOT}/mpfull_aug/mpfull_aug_final_xrd_norm_stats.json"
 MASK_LOSS_THRESHOLD = 1e-10
 MAX_PEAKS = 30
 

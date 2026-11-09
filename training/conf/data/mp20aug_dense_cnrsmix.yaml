@@ -1,5 +1,5 @@
 name: mp20aug_dense_cnrsmix
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_aug/all_aug
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cnrs_noise
 # Ablation: identical to mp20aug.yaml (dense input, same MP-20 augmented data and targets) but with its OWN
 # name, so training writes to $POWDERXRD_DATA_ROOT/mp20aug_dense_cnrsmix/... and cannot overwrite the
 # checkpoints of the already-trained dense model, which lives under the name mp20aug_noise. Use it with

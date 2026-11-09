@@ -18,7 +18,7 @@ and composition (peak intensities via form factors).
 
 Uses cosine similarity on the raw 8500-point dense curves (train_sim_xrd.pkl
 / val_sim_xrd.pkl / test_sim_xrd.pkl, single canonical curve per material,
-mp20_crystalyze_cag) -- top-1 nearest-neighbor per val/test material
+mp20_cag) -- top-1 nearest-neighbor per val/test material
 against train, same two-stage design as check_bispec_leakage.py (curve
 similarity as the fast filter, Niggli-reduced lattice comparison as
 confirmation, using mp20_lat_bispec.h5's recip_lattice for that step).
@@ -62,7 +62,7 @@ def lattice_diff(recip_a, recip_b):
 
 
 def main():
-    base = f"{DATA_ROOT}/mp20_crystalyze_cag"
+    base = f"{DATA_ROOT}/mp20_cag"
     print("Loading dense XRD curves...")
     curves = {}
     split_ids = {}

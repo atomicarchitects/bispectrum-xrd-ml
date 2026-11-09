@@ -6,7 +6,7 @@ extraction pipeline used during training.
 Usage:
     python eval_rruff_alpha_peaklist.py \
         --model_path $R/mpfull_aug_final_peaklist_bgmix_wlfix/transformerbispec/models/nlayers12_nhead8_dm256_hd512_lossL1_smallvalsFalse_masklossTrue.pt \
-        --train_data_dir $R/mpfull_aug_cag_strain_texture_bgmix_wlfix \
+        --train_data_dir $R/mpfull_cnrs_noise \
         --train_lat_file train_bispec_combined.pkl \
         --model_config conf/model/transformerbispec_sparse.yaml \
         --train_config conf/train/default.yaml \

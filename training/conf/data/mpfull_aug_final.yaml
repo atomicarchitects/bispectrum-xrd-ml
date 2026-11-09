@@ -1,5 +1,5 @@
 name: mpfull_aug_final
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug_cag_strain_texture
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mpfull_aug
 xrd_train_file: train_sim_xrd_combined.pkl
 target_train_file: train_bispec_combined.pkl
 xrd_val_file: val_sim_xrd.pkl

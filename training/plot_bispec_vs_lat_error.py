@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from utilities import get_bispectrum, get_neighbors, convert_lats_to_niggli
 
-TRAIN_LAT_PATH = os.environ.get('POWDERXRD_DATA_ROOT', './data') + '/mpfull_aug_cag_strain_texture/train_bispec_combined.pkl'
+TRAIN_LAT_PATH = os.environ.get('POWDERXRD_DATA_ROOT', './data') + '/mpfull_aug/train_bispec_combined.pkl'
 L_MAX, K_MAX, N_BASIS = 6, 2/3, 10
 
 

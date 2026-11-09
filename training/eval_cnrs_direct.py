@@ -18,7 +18,7 @@ Usage (full-MP model, selection slice):
 Usage (MP-20 model, on exactly the patterns of an inversion-input pkl, writing results in the
 same h5 format as run_alg_inversion.py so the same scoring applies):
     python eval_cnrs_direct.py --checkpoint-path /path/to/model.pt \\
-        --data-dir $POWDERXRD_DATA_ROOT/mp20_aug/all_aug \\
+        --data-dir $POWDERXRD_DATA_ROOT/mp20_cnrs_noise \\
         --xrd-train-file train_peaklist_bgmix.pkl \\
         --target-train-file all_aug_train_data_prim_lat.pkl \\
         --ids-from-pkl $POWDERXRD_DATA_ROOT/eval_results/opxrd_cnrs/inversion_inputs/<name>.pkl \\
@@ -41,7 +41,7 @@ from eval_opxrd_cnrs_selection_cosine import pad_peaks, MAX_PEAKS
 
 _ROOT = os.environ.get("POWDERXRD_DATA_ROOT", "./data")
 CNRS_DIR = f"{_ROOT}/opxrd_cnrs_eval"
-DATA_DIR = f"{_ROOT}/mpfull_aug_cag_strain_texture"
+DATA_DIR = f"{_ROOT}/mpfull_cnrs_noise"
 
 MODEL_KW = dict(out_dim=(1, 6), d_model=256, h_dim=512, transformer_proc="tokenization",
                  n_self_layer=12, n_head=8, attn_pdrop=0.2, resid_pdrop=0.2)

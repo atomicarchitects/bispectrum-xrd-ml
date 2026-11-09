@@ -188,12 +188,12 @@ def test_single_symprec_override_resolution(dataset, cli_symprec, expected):
     [
         ("mpfull", "strain", "mpfull_strain"),
         ("mpfull", "texture", "mpfull_texture_cag"),
-        ("mpfull", "caglioti4x", "mpfull_aug"),
-        ("mpfull", "single", "mpfull_crystalyze_cag"),
+        ("mpfull", "caglioti4x", "mpfull_caglioti4x"),
+        ("mpfull", "single", "mpfull_cag"),
         ("mp20", "strain", "mp20_strain"),
         ("mp20", "texture", "mp20_texture_cag"),
-        ("mp20", "caglioti", "mp20_cag"),
-        ("mp20", "single", "mp20_crystalyze_cag"),
+        ("mp20", "caglioti", "mp20_caglioti_sets"),
+        ("mp20", "single", "mp20_cag"),
     ],
 )
 def test_default_output_dir_per_dataset_and_augmentation(dataset, augmentation, expected_suffix):
@@ -360,7 +360,7 @@ def test_combine_matches_real_combined_training_data(dataset):
     # for xrd/bispec/lattice alike (already verified: test_run_combine_
     # merges_disjoint_key_namespaces), so checking bispec here is enough to
     # catch a real regression without OOMing a shared login node.
-    combined_dir = os.path.join(REAL_DATA_BASE, f"{dataset}_aug_cag_strain_texture")
+    combined_dir = os.path.join(REAL_DATA_BASE, f"{dataset}_aug")
     caglioti_dir = _real_output_dir(dataset, "caglioti")
     strain_dir = _real_output_dir(dataset, "strain")
     texture_dir = _real_output_dir(dataset, "texture")

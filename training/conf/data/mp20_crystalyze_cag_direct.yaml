@@ -1,5 +1,5 @@
 name: mp20_crystalyze_cag_direct
-DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_crystalyze_cag_direct
+DATA_DIR: ${oc.env:POWDERXRD_DATA_ROOT}/mp20_cag
 xrd_train_file: train_sim_xrd.pkl
 target_train_file: train_data_prim_lat.pkl
 xrd_val_file: val_sim_xrd.pkl
