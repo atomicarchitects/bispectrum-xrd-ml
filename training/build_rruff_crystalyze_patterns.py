@@ -1,5 +1,5 @@
 """
-Build the measured patterns for the Crystalyze RRUFF evaluation (test_pv_xrd.pt, read by
+Build the measured patterns for the Crystalyze RRUFF evaluation (rruff_measured_xrd.pt, read by
 eval_rruff_crystalyze.py) from RRUFF's processed powder files.
 
 For each of the 148 entries of splits/rruff_crystalyze_ids.txt, the RRUFF "XY_Processed" powder
@@ -13,7 +13,9 @@ entries. For Stephanite R050143, Pyrargyrite R050318, Senarmontite R060002 and P
 processed files RRUFF currently serves differ from the ones the paper's patterns were made from, so
 those four are built from the current files and results on them can differ from the reported ones.
 
-Output: {mineral: float32 tensor [1, 8500]}, by default $POWDERXRD_DATA_ROOT/rruff_crystalyze/test_pv_xrd.pt.
+Output: {mineral: float32 tensor [1, 8500]}, by default $POWDERXRD_DATA_ROOT/rruff_crystalyze/rruff_measured_xrd.pt.
+(Not to be confused with ../crystalyze/prepare_test_data.py's test_pv_xrd.pt, which holds patterns
+simulated from the CIFs as input for the Crystalyze model.)
 
 Usage:
     python build_rruff_crystalyze_patterns.py --xy-dir /path/to/XY_Processed
@@ -66,7 +68,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--xy-dir", required=True, help="directory of RRUFF XY_Processed powder files")
     p.add_argument("--ids", default=os.path.join(HERE, "splits", "rruff_crystalyze_ids.txt"))
-    p.add_argument("--out", default=f"{_ROOT}/rruff_crystalyze/test_pv_xrd.pt")
+    p.add_argument("--out", default=f"{_ROOT}/rruff_crystalyze/rruff_measured_xrd.pt")
     args = p.parse_args()
 
     out, missing = {}, []

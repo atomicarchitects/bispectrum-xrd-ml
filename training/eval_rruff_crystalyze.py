@@ -29,7 +29,7 @@ from omegaconf import OmegaConf
 
 _ROOT = os.environ.get("POWDERXRD_DATA_ROOT", "./data")
 CRYSTALYZE_DIR = f'{_ROOT}/rruff_crystalyze'
-XRD_PT   = f'{CRYSTALYZE_DIR}/test_pv_xrd.pt'
+XRD_PT   = f'{CRYSTALYZE_DIR}/rruff_measured_xrd.pt'  # measured patterns, from build_rruff_crystalyze_patterns.py
 REF_PKL  = f'{CRYSTALYZE_DIR}/rruff_crystalyze_targets.pkl'  # from build_rruff_crystalyze_targets.py
 
 def parse_args():
