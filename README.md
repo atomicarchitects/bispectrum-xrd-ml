@@ -1,7 +1,9 @@
 # bispectrum-xrd-ml
 
 Code for *Learning Lattice Parameters from Powder X-Ray Diffraction Data Using Invariants*
-(Hofgard et al., [arXiv:2607.21829](https://arxiv.org/abs/2607.21829)). A transformer maps a powder
+(Hofgard et al., *Acta Cryst. A*, [doi:10.1107/S2053273326010284](https://doi.org/10.1107/S2053273326010284);
+[arXiv:2607.21829](https://arxiv.org/abs/2607.21829)). Trained models and data:
+[doi:10.5281/zenodo.24091709](https://doi.org/10.5281/zenodo.24091709). A transformer maps a powder
 XRD pattern to a crystallographic bispectrum, which is inverted by L-BFGS to recover the lattice
 parameters.
 
@@ -45,8 +47,8 @@ is included in the archive.
 
 ## Pretrained models and data
 
-Download from **TODO: archive link / DOI**: `main.tar`, `cnrs_noise.tar` and `data.tar`, plus the
-lookup database and `cob_lmax6.pkl`.
+Download from Zenodo, [doi:10.5281/zenodo.24091709](https://doi.org/10.5281/zenodo.24091709):
+`main.tar`, `cnrs_noise.tar` and `data.tar`, plus the lookup database and `cob_lmax6.pkl`.
 
 - **`main/`**: the manuscript's models, with dense input and RRUFF-fit noise augmentation. These give
   the MP test-set, RRUFF and AlphaDiffract results, and the "Dense" rows of the CNRS tables.
@@ -86,10 +88,23 @@ pytest tests/
 @article{hofgard2026lattice,
   title   = {Learning Lattice Parameters from Powder X-Ray Diffraction Data Using Invariants},
   author  = {Hofgard, Elyssa and Min, Kyucheol and Segal, Nofit and Mittan-Moreau, David W. and
-             Mansouri Tehrani, Aria and Oklejas, Vanessa and Nigam, Jigyasa and Paley, Daniel W. and
+             Mansouri Tehrani, Aria and Oklejas, Vanessa and Gomez-Bombarelli, Rafael and Nigam, Jigyasa and Paley, Daniel W. and
              Brewster, Aaron S. and Smidt, Tess},
+  journal = {Acta Crystallographica Section A},
   year    = {2026},
+  doi     = {10.1107/S2053273326010284},
   eprint  = {2607.21829},
   archivePrefix = {arXiv}
+}
+
+@dataset{hofgard2026lattice_data,
+  title     = {Pretrained models and data for "Learning Lattice Parameters from Powder X-Ray
+               Diffraction Data Using Invariants"},
+  author    = {Hofgard, Elyssa and Min, Kyucheol and Segal, Nofit and Mittan-Moreau, David W. and
+               Mansouri Tehrani, Aria and Oklejas, Vanessa and Gomez-Bombarelli, Rafael and Nigam, Jigyasa and Paley, Daniel W. and
+               Brewster, Aaron S. and Smidt, Tess},
+  publisher = {Zenodo},
+  year      = {2026},
+  doi       = {10.5281/zenodo.24091709}
 }
 ```
