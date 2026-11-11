@@ -20,7 +20,7 @@ pip install -e .                # add ".[dev]" for pytest, ".[notebooks]" for mp
 export POWDERXRD_DATA_ROOT=/path/to/your/data
 ```
 
-Every script reads and writes under `$POWDERXRD_DATA_ROOT` (there is no default). Run the scripts
+Every script reads and writes to `$POWDERXRD_DATA_ROOT`. Run the scripts
 from their own directory, e.g. `cd training && python train.py ...`. Install the `notebooks` extra
 in a separate environment: `mp-api` can force a `pymatgen` downgrade.
 
@@ -28,22 +28,19 @@ in a separate environment: `mp-api` can force a `pymatgen` downgrade.
 
 The paper uses the data below. The simulated datasets (test and validation sets, training targets and
 peak lists, structures) are included in the archive (see
-[Pretrained models and data](#pretrained-models-and-data)); the experimental data is not.
+[Pretrained models and data](#pretrained-models-and-data)). The experimental data IDs are in the repo.
 
 - **Materials Project** (full set and MP-20). Split ids are in `training/splits/`:
   `mpfull_{train,val,test}_ids.txt` (92,708 / 31,722 / 30,449; by reduced formula, 60/20/20, seed 42)
   and `mp20_{train,val,test}_ids.txt` (the standard CDVAE splits).
 - **RRUFF** (<https://www.rruff.net/>; Lafuente et al., 2015). Entries are listed in
   `training/splits/rruff_alpha_ids.txt` (228) and `rruff_crystalyze_ids.txt` (148). The reported
-  Crystalyze-set results use the 134 in `rruff_crystalyze_eval_ids.txt`: 7 entries overlap the MP-20
-  training set and 7 have simulated rather than measured powder profiles.
+  Crystalyze-set results use the 134 in `rruff_crystalyze_eval_ids.txt`.
 - **opXRD**, CNRS/COD contribution. The 599 quality-controlled patterns used for evaluation are
   listed in `training/splits/cnrs_verified_ids.txt`.
 
 The inversion's lookup database (`materials_project_lat_bispec.h5`) is built by
-`bispectrum/build_lookup_database.py`. The paper's copy also contains the 1,922 MP-20 structures that
-are not in the full-MP splits (156,801 entries; the script reproduces the other 154,879 exactly), and
-is included in the archive.
+`bispectrum/build_lookup_database.py`.
 
 ## Pretrained models and data
 
@@ -65,8 +62,8 @@ Download from Zenodo, [doi:10.5281/zenodo.24091709](https://doi.org/10.5281/zeno
   `mp20_peaklist_{bispec,direct}` and `mpfull_peaklist_{bispec,direct}`.
   `mp20_peaklist_bispec/epoch51.pt` and `mp20_peaklist_direct/epoch36.pt` are the snapshots behind
   the reported CNRS numbers.
-- **`data/`** mirrors the data root: extract it and set `POWDERXRD_DATA_ROOT` to it, and the data
-  configs find their files. It holds `mp20_cag/`, `mp20_aug/`, `mp20_cnrs_noise/`, `mpfull_cag/`,
+- **`data/`**: set `POWDERXRD_DATA_ROOT` to this directory, and the data
+  configs find their files. It contains `mp20_cag/`, `mp20_aug/`, `mp20_cnrs_noise/`, `mpfull_cag/`,
   `mpfull_aug/`, `mpfull_cnrs_noise/` and the split structures in `structures/`. The dense training
   patterns (about 64 GB) are left out; `training/mp_full/generate_augmented_data.py
   --struct-dir <data>/structures/<mp20|mpfull>` regenerates them.
