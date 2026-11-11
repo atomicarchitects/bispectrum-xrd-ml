@@ -43,9 +43,7 @@ All four use d_model 256, 12 layers and 8 heads.
 ### CNRS-noise models
 
 These are the "+ CNRS noise" models of the opXRD CNRS ablation. Their background noise is drawn half
-from the RRUFF-fit profile and half from the CNRS-fit profile `cnrs_wlfix`. (The original `cnrs`
-profile was fit to patterns with an inverted wavelength conversion, since fixed in
-`prep_opxrd_cnrs.py`. It is kept only to reproduce older models.) Dense models add the noise during
+from the RRUFF-fit profile and half from the CNRS-fit profile `cnrs_wlfix`. Dense models add the noise during
 training; peak-list models need training peak lists built with it (step 1).
 
 | model | `data=` | `model=` | other overrides |
@@ -89,9 +87,6 @@ python build_rruff_crystalyze_patterns.py --xy-dir <RRUFF XY_Processed dir>   # 
 python build_rruff_crystalyze_targets.py     # from Crystalyze's test.csv -> rruff_crystalyze_targets.pkl
 python eval_rruff_crystalyze.py --model_path <ckpt> --norm_stats <xrd_norm_stats.json> --output_path <out>.pkl
 ```
-
-The patterns match the paper's for 144 entries. RRUFF has since changed the processed files for
-Stephanite R050143, Pyrargyrite R050318, Senarmontite R060002 and Proustite R060356.
 
 **opXRD CNRS** (raw JSON files in `$POWDERXRD_DATA_ROOT/opxrd_cnrs_eval/CNRS/`)
 
